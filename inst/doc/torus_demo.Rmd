@@ -1,0 +1,90 @@
+---
+title: "torus_demo"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{torus_demo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ashapesampler)
+library(alphashape3d)
+library(alphahull)
+library(doParallel)
+library(parallel)
+cores <- min(2L, detectCores())
+library(rgl)
+options(rgl.useNULL = TRUE)
+```
+
+In this document, we demonstrate the $\alpha$-shape sampler pipeline by simulating
+the process of learning a set of three-dimensional shapes (in this case, tori) and
+simulating a new shape from that. This vignette requires the packages `alphashape3d`,
+`alphahull`, `rgl`, `parallel`, and `doParallel` in addition to `ashapesampler`.
+
+Within vignettes, we are unable to set the number of cores above 2L. However, we highly 
+recommend using as many cores on the machine as possible to parallelize the code and 
+expedite computation, especially with 3D calculations.
+
+We begin by setting the parameters for our simulation. We will fix $\alpha=0.15$ 
+and $n=1000$, and draw 20 shapes for our data set. Our true underlying manifold
+will be the torus with major radius 0.5 and minor radius 0.15.
+
+```{r}
+N=10
+tau_vec <- vector("numeric", N)
+my_alpha <- 0.15
+n <- 1000
+r_maj <- 0.5
+r_min <- 0.15
+```
+
+Next we will draw the shapes themselves.
+
+```{r}
+torus_list <- list()
+complex_torus_list <- list()
+
+for (k in 1:N){
+  torus_pts <- rtorus(n, r_min, r_maj)
+  temp_torus <- ashape3d(torus_pts, my_alpha)
+  torus_list[[k]] <- temp_torus
+  complex_torus_list[[k]] <- get_alpha_complex(torus_pts, my_alpha)
+  tau_vec[k] <- tau_bound(torus_list[[k]]$x, complex_torus_list[[k]])
+}
+```
+
+Now that we have the shapes generated and imported, we can learn the underlying
+manifold. First we will put together the entire point cloud into one two column 
+matrix.
+
+```{r}
+choose_2 <- sample(N,2)
+point_cloud = rbind(torus_list[[choose_2[1]]]$x, torus_list[[choose_2[[2]]]]$x)
+```
+
+Then we will have our $\tau$ bound be a summary statistic of the $\tau$ found for 
+each input shape. Here, we will use mean, but one can tweak this to see different
+results. Note that if $\tau$ is too small, then the random walk won't be able to 
+execute around the point cloud, but if $\tau$ is too big, then we risk losing 
+geometric and topological information in the reconstruction.
+
+```{r}
+tau = min(tau_vec[choose_2[1]], tau_vec[choose_2[2]])
+```
+
+Now we can take the parameters and generate a new shape and plot it. Note we assume `k_min=3` as we are in three dimensions.
+
+```{r}
+new_torus <- generate_ashape3d(point_cloud, J=2, tau=tau, cores=cores)
+plot(new_torus, indexAlpha="all")
+rglwidget()
+```

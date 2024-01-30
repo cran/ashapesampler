@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>annulus_demo</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">annulus_demo</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(ashapesampler)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(alphahull)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; Loading required package: foreach</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; Loading required package: iterators</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; Loading required package: parallel</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>cores <span class="ot">&lt;-</span> <span class="fu">min</span>(2L, <span class="fu">detectCores</span>())</span></code></pre></div>
+<p>In this document, we demonstrate the <span class="math inline">\(\alpha\)</span>-shape sampler pipeline by
+simulating the process of learning a set of two-dimensional shapes (in
+this case, annuli) and simulating a new shape from that. This vignette
+requires the packages <code>alphahull</code>, <code>ggplot2</code>,
+<code>parallel</code>, and <code>doParallel</code> in addition to
+<code>ashapesampler</code>.</p>
+<p>We begin by setting the parameters for our simulation. We will fix
+<span class="math inline">\(\alpha=0.25\)</span> and <span class="math inline">\(n=100\)</span>, and draw 20 shapes for our data
+set. Our true underlying manifold will be the annulus with outer radius
+0.75 and inner radius 0.25.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">201723</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>my_alpha <span class="ot">=</span> <span class="fl">0.15</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">1000</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>N<span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>r_maj <span class="ot">&lt;-</span> <span class="fl">0.75</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>r_min <span class="ot">&lt;-</span> <span class="fl">0.25</span></span></code></pre></div>
+<p>Next we will draw the shapes themselves.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>ann_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>complex_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>tau_vec <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;numeric&quot;</span>, N)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N){</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  ann_pts <span class="ot">&lt;-</span> <span class="fu">runif_annulus</span>(n, r_maj, r_min)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  ann_list[[k]] <span class="ot">&lt;-</span> <span class="fu">ashape</span>(ann_pts, <span class="at">alpha =</span> my_alpha)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  complex_list[[k]] <span class="ot">&lt;-</span> <span class="fu">get_alpha_complex</span>(ann_pts, my_alpha)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  tau_vec[k] <span class="ot">&lt;-</span> <span class="fu">tau_bound</span>(ann_list[[k]]<span class="sc">$</span>x, complex_list[[k]])</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>}</span></code></pre></div>
+<p>Now that we have the shapes generated and imported, we want to sample
+point clouds to combine. We’ll choose 2.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>choose_2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(N,<span class="dv">2</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>point_cloud <span class="ot">=</span> <span class="fu">rbind</span>(ann_list[[choose_2[<span class="dv">1</span>]]]<span class="sc">$</span>x, ann_list[[choose_2[[<span class="dv">2</span>]]]]<span class="sc">$</span>x)</span></code></pre></div>
+<p>Then we will have our <span class="math inline">\(\tau\)</span> bound
+be a summary statistic of the <span class="math inline">\(\tau\)</span>
+found for each input shape. Here, we will use mean, but one can tweak
+this to see different results. Note that if <span class="math inline">\(\tau\)</span> is too small, then the random walk
+won’t be able to execute around the point cloud, but if <span class="math inline">\(\tau\)</span> is too big, then we risk losing
+geometric and topological information in the reconstruction.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>tau_vec2 <span class="ot">=</span> <span class="fu">c</span>(tau_vec[choose_2[<span class="dv">1</span>]], tau_vec[choose_2[<span class="dv">2</span>]])</span></code></pre></div>
+<p>Now we can take the parameters and generate a new shape and plot it.
+Here, we assume <code>k_min=2</code> as we are in two dimensions.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>new_annulus <span class="ot">&lt;-</span> <span class="fu">generate_ashape2d</span>(point_cloud, <span class="at">J=</span><span class="dv">2</span>, <span class="at">tau=</span><span class="fu">min</span>(tau_vec2), </span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                                 <span class="at">cores=</span>cores)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Acceptance Rate is 0.9384&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>tri_keep <span class="ot">=</span> new_annulus<span class="sc">$</span>delvor.obj<span class="sc">$</span>tri.obj<span class="sc">$</span>trlist[<span class="fu">which</span>(new_annulus<span class="sc">$</span>delvor.obj<span class="sc">$</span>tri.obj<span class="sc">$</span>cclist[,<span class="dv">3</span>]<span class="sc">&lt;</span>new_annulus<span class="sc">$</span>alpha), <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>dim_tri <span class="ot">=</span> <span class="fu">dim</span>(tri_keep)[<span class="dv">1</span>]</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>tri_keep <span class="ot">=</span> <span class="fu">as.vector</span>(<span class="fu">t</span>(tri_keep))</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>triangles <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="st">&quot;id&quot;</span><span class="ot">=</span><span class="fu">sort</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>dim_tri, <span class="dv">3</span>)), </span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>                       <span class="st">&quot;x&quot;</span><span class="ot">=</span>new_annulus<span class="sc">$</span>x[tri_keep, <span class="dv">1</span>], </span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>                       <span class="st">&quot;y&quot;</span><span class="ot">=</span>new_annulus<span class="sc">$</span>x[tri_keep,<span class="dv">2</span>])</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>extremes <span class="ot">=</span> <span class="fu">as.data.frame</span>(new_annulus<span class="sc">$</span>x[new_annulus<span class="sc">$</span>alpha.extremes,])</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>edges <span class="ot">=</span> <span class="fu">as.data.frame</span>(new_annulus<span class="sc">$</span>edges[,<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>])</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(new_annulus<span class="sc">$</span>x), <span class="fu">aes</span>(<span class="at">x=</span>X1, <span class="at">y=</span>X2)) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data=</span>triangles, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">group=</span>id), <span class="at">fill=</span><span class="st">&quot;gray&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data=</span>edges, <span class="fu">aes</span>(<span class="at">x=</span>x1, <span class="at">y=</span>y1, <span class="at">xend=</span>x2, <span class="at">yend=</span>y2), <span class="at">color=</span><span class="st">&quot;blue&quot;</span>)<span class="sc">+</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>extremes, <span class="fu">aes</span>(<span class="at">x=</span>V1, <span class="at">y=</span>V2), <span class="at">size=</span><span class="fl">1.5</span>)<span class="sc">+</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
